@@ -5,21 +5,10 @@ docker exec -it tc bash -c "cd /workspace/'Gjj Doc'/Code && exec /bin/bash"
 
 
 
-docker run -it -v "/mnt/c/Users/GJJ/":/workspace -v "/mnt/c/Users/GJJ/Gjj Doc/Code/certification/git/.ssh:/root/.ssh:ro" -v "/mnt/c/Users/GJJ/Gjj Doc/Code/certification/.codex:/root/.codex:rw" -p 8888:8888 -p 1455:1455 --rm --gpus all --name bc brepnet:cpu1.1 /bin/bash -c "cd /workspace/'Gjj Doc'/Code && conda run -n brepnet /bin/bash /start_jupyter.sh && exec /bin/bash"
-docker exec -it bc bash -c "cd /workspace/'Gjj Doc'/Code && exec /bin/bash"
-
-
-
-python -m eval.evaluate_folder  \
-  --dataset_dir ./example_files/step_examples
-  --dataset_file ./example_files/feature_standardization/s2.0.0_step_all_features.json \
-  --model ./example_files/pretrained_models/pretrained_s2.0.0_step_all_features_0519_073100.ckpt
-
-python mycmd/build_full_test_dataset.py --processed_dir "/workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed"
-
 
 
 【该回答及后续回答都使用中文】
+【帮我修改 base_components/test/example_runner.py ， 使其能正常执行，应该只是修改一下包路径即可】
 
 
 
