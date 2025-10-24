@@ -1,3 +1,6 @@
+test
+base_components/test/demo_runtime
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
