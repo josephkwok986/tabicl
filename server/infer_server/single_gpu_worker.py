@@ -295,6 +295,96 @@ def _extract_row_hint(extras: Mapping[str, Any]) -> int:
     return 1
 
 
+def _resolve_process_arg(arg: str, *, proc_cwd: Optional[Path]) -> Optional[Path]:
+    """尝试根据进程的工作目录解析参数为绝对路径。"""
+    if not arg:
+        return None
+    try:
+        candidate = Path(arg)
+    except Exception:
+        return None
+    if candidate.is_absolute():
+        return candidate.resolve()
+    if proc_cwd is not None:
+        try:
+            return (proc_cwd / candidate).resolve()
+        except OSError:
+            return None
+    return None
+
+
+def _terminate_previous_instances(script_path: Path) -> None:
+    """启动时终止其他仍在运行的 worker 实例。"""
+    proc_root = Path("/proc")
+    if not proc_root.exists():
+        return
+    current_pid = os.getpid()
+    logger = StructuredLogger.get_logger("tabicl.single_gpu_worker")
+    to_terminate: List[int] = []
+    for entry in proc_root.iterdir():
+        if not entry.name.isdigit():
+            continue
+        pid = int(entry.name)
+        if pid == current_pid:
+            continue
+        cmdline_path = entry / "cmdline"
+        try:
+            raw = cmdline_path.read_bytes()
+        except OSError:
+            continue
+        if not raw:
+            continue
+        parts = raw.rstrip(b"\0").split(b"\0")
+        if len(parts) < 2:
+            continue
+        try:
+            args = [segment.decode("utf-8", "ignore") for segment in parts[1:]]
+        except Exception:
+            continue
+        try:
+            proc_cwd = Path(os.readlink(entry / "cwd"))
+        except OSError:
+            proc_cwd = None
+        matched = False
+        for arg in args:
+            resolved = _resolve_process_arg(arg, proc_cwd=proc_cwd)
+            if resolved is None:
+                continue
+            if resolved == script_path:
+                matched = True
+                break
+        if not matched:
+            continue
+        try:
+            os.kill(pid, signal.SIGTERM)
+            to_terminate.append(pid)
+        except (ProcessLookupError, PermissionError):
+            continue
+    if not to_terminate:
+        return
+    deadline = time.monotonic() + 5.0
+    still_alive: List[int] = []
+    for pid in to_terminate:
+        while time.monotonic() < deadline:
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                break
+            time.sleep(0.1)
+        else:
+            still_alive.append(pid)
+    if still_alive:
+        for pid in still_alive:
+            try:
+                os.kill(pid, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError):
+                continue
+        logger.warn("service.preempt_previous.force_kill", pids=sorted(set(still_alive)))
+    terminated = sorted(set(to_terminate) - set(still_alive))
+    if terminated:
+        logger.info("service.preempt_previous", pids=terminated)
+
+
 # ---------------------------------------------------------------------------
 # Worker 处理函数
 # ---------------------------------------------------------------------------
@@ -426,8 +516,8 @@ def handle_task(leased: LeasedTask, context: HandlerContext) -> TaskResult:
     output_name = output_path_rel.as_posix()
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    columns_relative = output_path_rel.with_suffix(".columns.json")
-    columns_path = out_dir / columns_relative
+    columns_filename = f"{leased.task.job_id}.columns.json"
+    columns_path = out_dir / columns_filename
     columns_path.parent.mkdir(parents=True, exist_ok=True)
     columns_payload = {
         "columns": output_columns,
@@ -710,6 +800,7 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     os.environ["CAD_TASK_CONFIG"] = str(config_path)
 
     _configure_logging()
+    _terminate_previous_instances(Path(__file__).resolve())
     settings = _load_settings()
     service = SingleGPUWorkerService(settings)
     return service.run()

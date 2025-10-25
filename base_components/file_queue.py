@@ -177,6 +177,7 @@ class FileQueue:
         ids: List[int] = []
         with self._lock:
             self._ensure_initialised()
+            self._refresh_state_if_needed()
             now = time.time()
             for payload in payloads:
                 rec_id = self._next_rec_id
@@ -214,6 +215,7 @@ class FileQueue:
         leases: List[LeaseRecord] = []
         with self._lock:
             self._ensure_initialised()
+            self._refresh_state_if_needed()
             self._reap_expired(now)
             if max_n <= 0:
                 return leases
@@ -295,6 +297,7 @@ class FileQueue:
     def stats(self) -> Dict[str, int]:
         with self._lock:
             self._ensure_initialised()
+            self._refresh_state_if_needed()
             now = time.time()
             visible = 0
             for record in self._records:
@@ -486,6 +489,32 @@ class FileQueue:
             if record is not None and not record.acked:
                 record.visible_at = now + max(0.0, self.config.retry_delay_seconds)
             self._scan_index = 0
+
+    def _refresh_state_if_needed(self) -> None:
+        """检测磁盘上是否有新记录，如有则重新加载队列状态。"""
+        try:
+            meta_raw = self.meta_path.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            return
+        try:
+            meta = json.loads(meta_raw)
+        except json.JSONDecodeError:
+            return
+        expected_count = int(meta.get("record_count", len(self._records)))
+        expected_next = int(meta.get("next_rec_id", self._next_rec_id))
+        if expected_count <= len(self._records) and expected_next <= self._next_rec_id:
+            return
+        if self._tail_writer is not None:
+            self._tail_writer.close()
+            self._tail_writer = None
+        self._lease_map.clear()
+        self._lease_heap.clear()
+        self._records.clear()
+        self._records_by_id.clear()
+        self._segment_counts.clear()
+        self._next_rec_id = 1
+        self._meta = meta
+        self._load_state()
 
 
 def _bit_test(data: bytes, index: int) -> bool:

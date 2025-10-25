@@ -14,7 +14,7 @@ logger:
     - # 控制台输出
       type: console
       stream: stdout
-      min_level: ERROR
+      min_level: INFO #ERROR
 # 任务系统配置（队列与执行器）
 task_system:
   pool:

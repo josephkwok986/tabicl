@@ -124,6 +124,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         return 1
     all_patterns = tuple(DEFAULT_PATTERNS) + tuple(args.extra or ())
     clean(root, all_patterns, dry_run=args.dry_run)
+
+    _remove_path(Path("/workspace/Gjj Doc/Code/tabicl/server/infer_server/runtime"), dry_run=False)
     return 0
 
 
