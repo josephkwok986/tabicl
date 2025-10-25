@@ -8,40 +8,11 @@ python server/infer_server/single_gpu_worker.py --config server/infer_server/wor
 
 python server/produce_server/task_producer.py --config server/produce_server/producer_config.yaml
 
+python my_tools/pick_csvs.py '/workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/embeddings_brepnet_csv' '/workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/tabicl_context' 500 --recursive --seed 42
+
 python my_tools/cleanup.py 
 
 
-【 producer_config.yaml 无需 pass_through_indices 字段。 produce_server 默认把所有字段全部用于生产任务，再支持 feature_exclude_indices 和 feature_indices 即可。 context_data.yaml 里的 output_passthrough_indices 字段，应该是对所有推理数据指定的列下标原样输出到结果中。】
-
-【该回答及后续回答都使用中文】
-【为什么 produce_server/producer_config.yaml 有 task_config 字段呢？无需修改代码】
-
-【infer_server 输出的结果以 csv 格式给出（不要json格式），另外在输出目录中产生一个文件解析 csv 的各个列名。输出仅需要 context_data.yaml 里指定的相关字段，及预测字段，如果配置了“输出概率分布”，那也包括该字段。】
-
-【在 my_tools 里写一个 python 代码，清除该项目的所有临时文件（或文件夹）和中间文件，并容易的让我添加清除其他文件或文件夹】
-
-【tabicl-sample-d1845d9851a75762a21a.columns.json 这种文件，生成一个就可以了，所有文件的列都是一样的】
-
-【infer_server 和 produce_server 都会写一个任务队列池？那如果两个进程同时启动，会不会有写冲突导致出BUG？】
-
-【该回答及后续回答都使用中文】
-【我先执行 python server/infer_server/single_gpu_worker.py --config server/infer_server/worker_config.yaml 命令，让推理服务完成初始化并一直监控着任务队列池，同时执行 python server/produce_server/task_producer.py --config server/produce_server/producer_config.yaml 生产任务，我看日志推理服务好像并没有发现新的任务？现在的推理服务进程还在，你可以检查相关进程和数据文件或日志等】
-
-【意思是，我在启动推理服务之前，任务队列池里必须有任务才行吗？如果没有任务，推理服务启动后就不会再扫描任务队列池？仅解析，无需写代码】
-
-【我执行 python server/infer_server/single_gpu_worker.py --config server/infer_server/worker_config.yaml 后，并没有做什么操作挂起或暂停该进程】
-
-
-【我刚刚再次执行 python server/infer_server/single_gpu_worker.py --config server/infer_server/worker_config.yaml 了，你帮忙看看进程状态，另外目前任务队列池应该是空的】
-
-【帮我在推理服务（即server/infer_server/single_gpu_worker.py）加一个功能，在启动后立刻检查并杀死所有之前启动的推理服务。】
-
-【我刚刚再次执行 python server/infer_server/single_gpu_worker.py --config server/infer_server/worker_config.yaml 了，你帮忙看看进程状态，目前应该只有一个推理服务进程，另外目前任务队列池应该是空的】
-
-【我已经执行 任务生产脚本，但推理服务进程 并没有自动拾取】
-
-【可以了！是什么原因导致的？？跟我解析一下】
-
-
+【】
 
 codex "$(cat prompt.txt)"

@@ -1,5 +1,6 @@
 # 任务扫描输入目录（默认使用 server/sample_data）
-input_dir: server/sample_data
+#input_dir: server/sample_data
+input_dir: /workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/embeddings_brepnet_csv
 # 文件队列所在目录（需与推理服务配置一致）
 queue_dir: server/infer_server/runtime/queue
 # 任务所属 job_id

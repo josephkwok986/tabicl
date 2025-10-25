@@ -1,5 +1,6 @@
 # 上下文数据文件路径（可相对 data_root 或使用绝对路径）
-context_path: server/context_data
+#context_path: server/context_data
+context_path: /workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/tabicl_context
 # 训练数据文件格式，支持 csv/parquet/jsonl
 train_format: csv
 # 训练数据标签列索引（0 基）

@@ -14,7 +14,7 @@ logger:
     - # 控制台输出
       type: console
       stream: stdout
-      min_level: INFO #ERROR
+      min_level: ERROR
 # 任务系统配置（队列与执行器）
 task_system:
   pool:
@@ -76,7 +76,8 @@ single_gpu_worker:
   # 进度条描述
   progress_description: "TabICL 单 GPU Worker"
   # 结果输出根目录
-  output_root: server/infer_server/runtime/results
+  #output_root: server/infer_server/runtime/results
+  output_root: /workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/tabicl_predict
   # 未指定文件名时的默认模板
   default_output_filename: "{task_id}.csv"
   # 默认数据格式（预测/上下文均可覆盖）
@@ -100,7 +101,7 @@ single_gpu_worker:
     # 禁止自动下载，需预置权重
     allow_auto_download: false
     # 推理批大小
-    batch_size: 8
+    batch_size: 32
     # 启用混合精度加速
     use_amp: true
     # 推理设备
