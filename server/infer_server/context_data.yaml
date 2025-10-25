@@ -1,0 +1,16 @@
+# 上下文数据文件路径（可相对 data_root 或使用绝对路径）
+#context_path: server/context_data
+context_path: /workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/tabicl_context
+# 训练数据文件格式，支持 csv/parquet/jsonl
+train_format: csv
+# 训练数据标签列索引（0 基）
+label_column_index: 0
+# 训练数据用于建模的特征列索引配置
+# - 指定 feature_indices 表示白名单，仅这些列作为特征
+# - 指定 feature_exclude_indices 表示黑名单，排除列索引后其余列作为特征
+#feature_indices: []
+feature_exclude_indices: [0,1,2]
+# （可选）样本唯一标识列索引
+id_column_index: null
+# （可选）对所有推理输出原样保留的列索引
+output_passthrough_indices: [0,1,2]

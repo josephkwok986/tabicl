@@ -1,0 +1,110 @@
+# 配置文件版本号
+version: 1
+# config 节点内部版本号（保持与主版本同步）
+config:
+  version: 1
+# 日志输出相关配置
+logger:
+  # 默认日志级别
+  level: INFO
+  # 日志命名空间前缀
+  namespace: tabicl.worker
+  # 日志输出目的地列表
+  sinks:
+    - # 控制台输出
+      type: console
+      stream: stdout
+      min_level: ERROR
+# 任务系统配置（队列与执行器）
+task_system:
+  pool:
+    # 默认租约 TTL（秒），缺省用于延展
+    default_ttl: 600.0
+    # 文件队列后端参数
+    backend:
+      # 队列类型
+      type: file
+      # 队列根目录
+      path: server/infer_server/runtime/queue
+      # 队列名称
+      queue_name: tabicl
+      # put 后立即落盘，便于调试
+      flush_each_put: true
+      # 最大尝试次数
+      max_attempts: 5
+      # 重试前的延迟（秒）
+      retry_delay_seconds: 5.0
+      # 单段文件最大字节数
+      max_segment_bytes: 16777216
+      # 记录租约日志的批量大小
+      lease_log_batch: 64
+      # 租约采样窗口大小
+      lease_sample_size: 512
+  executor:
+    # 最大并发数（本服务固定为 1）
+    max_concurrency: 1
+    # 每次租约请求条数
+    lease_batch_size: 1
+    # 租约 TTL（秒）
+    lease_ttl: 300.0
+    # 预取队列容量
+    prefetch: 1
+    # 空闲后重试间隔（秒）
+    idle_sleep: 0.5
+    # 最大重试次数
+    max_retries: 2
+    # 退避基数（指数回退基准）
+    backoff_base: 2.0
+    # 退避抖动范围
+    backoff_jitter: 0.5
+    # 任务超时时间（null 表示不限制）
+    task_timeout: null
+    # 失败后的额外延迟
+    failure_delay: null
+    # 任务过滤条件（未使用）
+    filters: {}
+    # 失败是否重新入队
+    requeue_on_failure: true
+    # 首选 GPU 列表
+    preferred_gpus: [0]
+    # 心跳上报间隔（秒）
+    heartbeat_interval: 60.0
+# 单 GPU Worker 专用配置
+single_gpu_worker:
+  # 任务 job_id，用于标识日志/结果
+  job_id: tabicl-single-gpu
+  # 进度条描述
+  progress_description: "TabICL 单 GPU Worker"
+  # 结果输出根目录
+  #output_root: server/infer_server/runtime/results
+  output_root: /workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/tabicl_predict
+  # 未指定文件名时的默认模板
+  default_output_filename: "{task_id}.csv"
+  # 默认数据格式（预测/上下文均可覆盖）
+  default_data_format: "csv"
+  # 是否输出概率分布
+  include_probabilities: true
+  # 空闲日志最小间隔（秒）
+  idle_log_interval: 30.0
+  # 数据根目录（上下文与预测路径可相对该目录）
+  data_root: .
+  # 上下文训练数据配置文件
+  context_config_path: server/infer_server/context_data.yaml
+  # 模型权重文件路径
+  model_ckpt_path: /workspace/Gjj Local/data/tabcil/ckpt/tabicl-classifier-v1.1-0506.ckpt
+  # 任务队列所在目录（与文件队列 path 一致）
+  task_queue_path: server/infer_server/runtime/queue
+  # TabICLClassifier 的初始化参数
+  model:
+    # 权重版本（用于校验）
+    checkpoint_version: "tabicl-classifier-v1.1-0506.ckpt"
+    # 禁止自动下载，需预置权重
+    allow_auto_download: false
+    # 推理批大小
+    batch_size: 32
+    # 启用混合精度加速
+    use_amp: true
+    # 推理设备
+    device: "cuda"
+    # 输出详细日志（保持关闭）
+    verbose: false

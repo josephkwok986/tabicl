@@ -1,0 +1,19 @@
+# 任务扫描输入目录（默认使用 server/sample_data）
+#input_dir: server/sample_data
+input_dir: /workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/embeddings_brepnet_csv
+# 文件队列所在目录（需与推理服务配置一致）
+queue_dir: server/infer_server/runtime/queue
+# 任务所属 job_id
+job_id: tabicl-sample
+# 队列名称
+queue_name: tabicl
+# 预测数据特征列索引白名单（可选，与 feature_exclude_indices 互斥；为空表示使用全部）
+feature_indices: []
+# 预测数据特征列黑名单（可选，与 feature_indices 互斥）
+#feature_exclude_indices: []
+# 样本唯一 ID 列索引（可选）
+id_column_index: null
+# 扫描进程数（null 表示使用 CPU 核心数）
+processes: null
+# task_system 配置文件路径（默认复用推理服务配置）
+task_config: server/infer_server/worker_config.yaml

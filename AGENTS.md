@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-TabICL is packaged from `src/tabicl`, which exposes the public API through `__init__.py` and groups implementation details under `model/`, `prior/`, `sklearn/`, and `train/`. Unit tests live in `tests/` and mirror the package layout; add new files next to the code they exercise (e.g., `tests/test_model.py`). Training and experiment scripts are kept in `scripts/` (stage1-3 curriculum helpers) while research notebooks and larger assets sit in `brepnet/`, `infer_server/`, and `figures/`. Keep auxiliary utilities inside `my_scripts*/` unless they graduate into the core library.
+TabICL is packaged from `src/tabicl`, which exposes the public API through `__init__.py` and groups implementation details under `model/`, `prior/`, `sklearn/`, and `train/`. Unit tests live in `tests/` and mirror the package layout; add new files next to the code they exercise (e.g., `tests/test_model.py`). Training and experiment scripts are kept in `scripts/` (stage1-3 curriculum helpers) while research notebooks and larger assets sit in `brepnet/`, `server/infer_server/`, and `figures/`. Keep auxiliary utilities inside `my_scripts*/` unless they graduate into the core library.
 
 ## Build, Test, and Development Commands
 Install editable deps with `pip install -e .` from the repo root. Use Hatch for repeatable workflows:
