@@ -1,5 +1,6 @@
 test
 base_components/test/demo_runtime
+server/infer_server/runtime
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

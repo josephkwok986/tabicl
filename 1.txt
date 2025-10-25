@@ -6,10 +6,13 @@ docker exec -it tc bash -c "cd /workspace/'Gjj Doc'/Code && exec /bin/bash"
 
 
 
+【 producer_config.yaml 无需 pass_through_indices 字段。 produce_server 默认把所有字段全部用于生产任务，再支持 feature_exclude_indices 和 feature_indices 即可。 context_data.yaml 里的 output_passthrough_indices 字段，应该是对所有推理数据指定的列下标原样输出到结果中。】
 
 【该回答及后续回答都使用中文】
-【帮我修改 base_components/test/example_runner.py ， 使其能正常执行，应该只是修改一下包路径即可】
+【为什么 produce_server/producer_config.yaml 有 task_config 字段呢？无需修改代码】
 
+【infer_server 输出的结果以 csv 格式给出（不要json格式），另外在输出目录中产生一个文件解析 csv 的各个列名。输出仅需要 context_data.yaml 里指定的相关字段，及预测字段，如果配置了“输出概率分布”，那也包括该字段。】
 
+【在 my_tools 里写一个 python 代码，清除该项目的所有临时文件（或文件夹）和中间文件，并容易的让我添加清除其他文件或文件夹】
 
 codex "$(cat prompt.txt)"
