@@ -4,10 +4,30 @@
 Compute micro-averaged Accuracy across all CSV files in a directory.
 Usage example:
 python metrics/compute_accuracy.py --dir data/ --pred-col y_pred --true-col y_true --dropna
-  
+
+
+python metrics/compute_accuracy.py --dir "/workspace/Gjj Doc/Code/BRepNet/mycmd/classification_server/infer_server/runtime/results" --pred-col predicted_label --true-col true_label --dropna
+
+Overall N=77070 Correct=70937   Acc=0.920423
+
 python metrics/compute_accuracy.py --dir "/workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/tabicl_predict" --pred-col prediction --true-col col_0 --dropna
 
-Overall N=4776  Correct=4524    Acc=0.947236
+1000上下文
+Overall N=77067 Correct=70762   Acc=0.918188
+2000上下文
+Overall N=6525  Correct=6128    Acc=0.939157
+Overall N=8401  Correct=7841    Acc=0.933341
+Overall N=8420  Correct=7860    Acc=0.933492
+Overall N=8732  Correct=8170    Acc=0.935639
+Overall N=9050  Correct=8455    Acc=0.934254
+Overall N=10270 Correct=9606    Acc=0.935346
+Overall N=10728 Correct=10038   Acc=0.935682
+Overall N=14498 Correct=13506   Acc=0.931577
+Overall N=15406 Correct=14313   Acc=0.929054
+Overall N=18776 Correct=17355   Acc=0.924318
+Overall N=20689 Correct=19097   Acc=0.923051
+Overall N=22421 Correct=20717   Acc=0.924000
+Overall N=29321 Correct=27080   Acc=0.923570
 
 """
 import argparse

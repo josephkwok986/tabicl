@@ -1,0 +1,30 @@
+columns:
+  label:
+    position: 1
+    dtype: int
+    meaning: 面类别标签。训练集提供真实类别，缺失时通常为 -1。
+  source_rel_path:
+    position: 2
+    dtype: str
+    meaning: 相对于 Fusion 360 processed 根目录的 STEP 文件路径。
+  face_index:
+    position: 3
+    dtype: int
+    meaning: 在对应 STEP 模型中的面索引，从 0 开始。
+  design_id:
+    position: 4
+    dtype: str
+    meaning: 设计件标识，由文件名的 `<design_int>_<design_hash8>` 组成。
+  part_uid:
+    position: 5
+    dtype: str
+    meaning: 单个实体标识，由文件名的 `<design_int>_<design_hash8>_<body_idx>` 组成。
+  embeddings:
+    start_position: 6
+    end_position: 89
+    count: 84
+    dtype: float
+    meaning: BRepNet 生成的 84 维面嵌入向量，单位无关，用于下游分类或相似性检索。
+    notes:
+      - 向量按模型导出的顺序保存，并在写入时做逐行 L2 归一化。
+      - 每行的嵌入与上述 label/face_index 一一对应。

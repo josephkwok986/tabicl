@@ -4,15 +4,18 @@ docker run -it -v "/mnt/c/Users/GJJ/":/workspace -v "/mnt/c/Users/GJJ/Gjj Doc/Co
 docker exec -it tc bash -c "cd /workspace/'Gjj Doc'/Code && exec /bin/bash"
 
 
-python server/infer_server/single_gpu_worker.py --config server/infer_server/worker_config.yaml
+python mycmd/server/infer_server/single_gpu_worker.py --config mycmd/server/infer_server/worker_config.yaml
 
-python server/produce_server/task_producer.py --config server/produce_server/producer_config.yaml
+python mycmd/server/produce_server/task_producer.py --config mycmd/server/produce_server/producer_config.yaml
 
 python my_tools/pick_csvs.py '/workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/embeddings_brepnet_csv' '/workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/tabicl_context' 500 --recursive --seed 42
 
 python my_tools/cleanup.py 
 
 
-【】
+【该回答及后续回答都使用中文】
+【修改 mycmd/server/produce_server/task_producer.py ，在 producer_config.yaml 增加一个开关控制，使其生成任务加入任务队列池子时，支持不按固定顺序加入任务，而是随机顺序加入任务。】
+【帮我测试该修改】
+【对该功能引入可配置的随机种子】
 
 codex "$(cat prompt.txt)"

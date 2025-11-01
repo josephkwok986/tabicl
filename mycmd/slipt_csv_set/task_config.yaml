@@ -1,0 +1,32 @@
+version: 1
+logger:
+  level: INFO
+  namespace: csv_split
+  sinks:
+    - type: console
+      stream: stdout
+task_system:
+  pool:
+    default_ttl: 60.0
+    backend:
+      type: file
+      path: mycmd/slipt_csv_set/runtime/queue
+      queue_name: csv_split
+      flush_each_put: true
+      max_attempts: 3
+      retry_delay_seconds: 1.0
+  executor:
+    max_concurrency: 4
+    lease_batch_size: 8
+    lease_ttl: 60.0
+    prefetch: 16
+    idle_sleep: 0.1
+    max_retries: 1
+    backoff_base: 0.5
+    backoff_jitter: 0.25
+    task_timeout: null
+    failure_delay: null
+    filters: {}
+    requeue_on_failure: true
+    preferred_gpus: []
+    heartbeat_interval: null

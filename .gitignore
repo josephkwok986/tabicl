@@ -1,6 +1,7 @@
 test
 base_components/test/demo_runtime
-server/infer_server/runtime
+mycmd/server/infer_server/runtime
+mycmd/slipt_csv_set/runtime
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

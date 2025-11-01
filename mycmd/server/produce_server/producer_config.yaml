@@ -1,0 +1,23 @@
+# 任务扫描输入目录（默认使用 mycmd/server/sample_data）
+#input_dir: mycmd/server/sample_data
+input_dir: /workspace/Gjj Local/data/fusion-360-gallery-dataset-s2.0.0/processed/embeddings_brepnet_csv_step_1/test_set
+# 文件队列所在目录（需与推理服务配置一致）
+queue_dir: mycmd/server/infer_server/runtime/queue
+# 任务所属 job_id
+job_id: tabicl-sample
+# 队列名称
+queue_name: tabicl
+# 是否在入队前随机打乱任务顺序
+randomize_task_order: true
+# 随机打乱任务顺序使用的随机种子（留空表示每次使用不同的随机序列）
+random_seed: 42
+# 预测数据特征列索引白名单（可选，与 feature_exclude_indices 互斥；为空表示使用全部）
+feature_indices: []
+# 预测数据特征列黑名单（可选，与 feature_indices 互斥）
+#feature_exclude_indices: []
+# 样本唯一 ID 列索引（可选）
+id_column_index: null
+# 扫描进程数（null 表示使用 CPU 核心数）
+processes: null
+# task_system 配置文件路径（默认复用推理服务配置）
+task_config: mycmd/server/infer_server/worker_config.yaml
